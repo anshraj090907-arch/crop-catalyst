@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Crop Catalyst — AI Crop Yield Predictor</title>
+  <meta name="description" content="Crop Catalyst is an AI-powered smart farming advisor that predicts crop yield and gives personalized suggestions to maximize agricultural production." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ── HERO HEADER ──────────────────────────────────────────────────────── -->
+  <header class="hero">
+    <div class="hero-bg-anim"></div>
+    <div class="hero-content">
+      <div class="hero-badge" id="backend-status">
+        <span class="status-dot" id="status-dot"></span>
+        <span id="status-text">Connecting…</span>
+      </div>
+      <h1 class="hero-title">🌾 Crop Catalyst</h1>
+      <p class="hero-subtitle">AI-Powered Crop Yield Prediction &amp; Smart Farming Advisor</p>
+      <div class="hero-chips">
+        <span class="chip">🤖 Random Forest AI</span>
+        <span class="chip">📊 150,000+ Training Samples</span>
+        <span class="chip">🌍 6 Crop Types</span>
+        <span class="chip">⚡ Real-time Prediction</span>
+      </div>
+    </div>
+    <div class="hero-wave">
+      <svg viewBox="0 0 1440 80" preserveAspectRatio="none"><path d="M0,40 C360,80 1080,0 1440,40 L1440,80 L0,80 Z" fill="var(--bg-primary)"/></svg>
+    </div>
+  </header>
+
+  <!-- ── MAIN APP ─────────────────────────────────────────────────────────── -->
+  <main class="app-shell">
+
+    <!-- ── LEFT: INPUT PANEL ──────────────────────────────────────────────── -->
+    <aside class="input-panel glass-card" id="input-panel">
+      <h2 class="panel-title">🌱 Farm Inputs</h2>
+
+      <div class="form-group">
+        <label for="region">📍 Region</label>
+        <div class="select-wrap">
+          <select id="region">
+            <option value="North">North</option>
+            <option value="South">South</option>
+            <option value="East">East</option>
+            <option value="West">West</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="crop">🌾 Crop Type</label>
+        <div class="select-wrap">
+          <select id="crop">
+            <option value="Wheat">Wheat</option>
+            <option value="Rice">Rice</option>
+            <option value="Maize">Maize</option>
+            <option value="Cotton">Cotton</option>
+            <option value="Barley">Barley</option>
+            <option value="Soybean">Soybean</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="soil_type">🌍 Soil Type</label>
+        <div class="select-wrap">
+          <select id="soil_type">
+            <option value="Loam">Loam</option>
+            <option value="Sandy">Sandy</option>
+            <option value="Silt">Silt</option>
+            <option value="Clay">Clay</option>
+            <option value="Chalky">Chalky</option>
+            <option value="Peaty">Peaty</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="weather">🌤 Weather Condition</label>
+        <div class="select-wrap">
+          <select id="weather">
+            <option value="Sunny">☀️ Sunny</option>
+            <option value="Rainy">🌧 Rainy</option>
+            <option value="Cloudy">☁️ Cloudy</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="rainfall">🌧 Rainfall (mm) — <span id="rainfall-val">100</span> mm</label>
+        <input type="range" id="rainfall" min="0" max="500" value="100" class="slider" />
+        <div class="slider-ticks"><span>0</span><span>250</span><span>500</span></div>
+      </div>
+
+      <div class="form-group">
+        <label for="temperature">🌡 Temperature (°C) — <span id="temp-val">25</span>°C</label>
+        <input type="range" id="temperature" min="0" max="50" value="25" class="slider" />
+        <div class="slider-ticks"><span>0°</span><span>25°</span><span>50°</span></div>
+      </div>
+
+      <div class="form-group">
+        <label for="days_to_harvest">⏱ Days to Harvest — <span id="days-val">120</span> days</label>
+        <input type="range" id="days_to_harvest" min="60" max="200" value="120" class="slider" />
+        <div class="slider-ticks"><span>60</span><span>130</span><span>200</span></div>
+      </div>
+
+      <div class="toggle-row">
+        <div class="toggle-group">
+          <span class="toggle-label">🧴 Fertilizer Used</span>
+          <label class="toggle-switch">
+            <input type="checkbox" id="fertilizer" checked />
+            <span class="toggle-thumb"></span>
+          </label>
+          <span class="toggle-state" id="fert-state">Yes</span>
+        </div>
+        <div class="toggle-group">
+          <span class="toggle-label">💧 Irrigation Used</span>
+          <label class="toggle-switch">
+            <input type="checkbox" id="irrigation" checked />
+            <span class="toggle-thumb"></span>
+          </label>
+          <span class="toggle-state" id="irr-state">Yes</span>
+        </div>
+      </div>
+
+      <button class="predict-btn" id="predict-btn" onclick="predict()">
+        <span class="btn-icon">🚀</span>
+        <span class="btn-text">Predict Yield</span>
+        <span class="btn-shimmer"></span>
+      </button>
+    </aside>
+
+    <!-- ── RIGHT: OUTPUT PANEL ────────────────────────────────────────────── -->
+    <section class="output-panel" id="output-panel">
+
+      <!-- Input Summary -->
+      <div class="glass-card summary-card" id="summary-card">
+        <h2 class="panel-title">📊 Input Summary</h2>
+        <div class="summary-grid" id="summary-grid">
+          <div class="summary-item"><span class="s-icon">📍</span><span class="s-label">Region</span><span class="s-val" id="s-region">North</span></div>
+          <div class="summary-item"><span class="s-icon">🌾</span><span class="s-label">Crop</span><span class="s-val" id="s-crop">Wheat</span></div>
+          <div class="summary-item"><span class="s-icon">🌍</span><span class="s-label">Soil</span><span class="s-val" id="s-soil">Loam</span></div>
+          <div class="summary-item"><span class="s-icon">🌤</span><span class="s-label">Weather</span><span class="s-val" id="s-weather">Sunny</span></div>
+          <div class="summary-item"><span class="s-icon">🌧</span><span class="s-label">Rainfall</span><span class="s-val" id="s-rainfall">100 mm</span></div>
+          <div class="summary-item"><span class="s-icon">🌡</span><span class="s-label">Temp</span><span class="s-val" id="s-temp">25 °C</span></div>
+          <div class="summary-item"><span class="s-icon">⏱</span><span class="s-label">Days</span><span class="s-val" id="s-days">120</span></div>
+          <div class="summary-item"><span class="s-icon">🧴</span><span class="s-label">Fertilizer</span><span class="s-val" id="s-fert">Yes</span></div>
+          <div class="summary-item"><span class="s-icon">💧</span><span class="s-label">Irrigation</span><span class="s-val" id="s-irr">Yes</span></div>
+        </div>
+      </div>
+
+      <!-- Prediction Result -->
+      <div class="glass-card result-card hidden" id="result-card">
+        <h2 class="panel-title">📈 Prediction Result</h2>
+
+        <div class="yield-display">
+          <div class="yield-ring-wrap">
+            <svg class="yield-ring" viewBox="0 0 120 120">
+              <circle class="ring-track" cx="60" cy="60" r="50" />
+              <circle class="ring-fill" id="ring-fill" cx="60" cy="60" r="50"
+                stroke-dasharray="314" stroke-dashoffset="314" />
+            </svg>
+            <div class="yield-center">
+              <span class="yield-num" id="yield-num">0.00</span>
+              <span class="yield-unit">t/ha</span>
+            </div>
+          </div>
+          <div class="yield-meta">
+            <div class="meta-block">
+              <span class="meta-label">🌾 Predicted Yield</span>
+              <span class="meta-val" id="yield-label">—</span>
+            </div>
+            <div class="meta-block">
+              <span class="meta-label">📊 Model R² Score</span>
+              <span class="meta-val" id="r2-label">—</span>
+            </div>
+            <div class="yield-grade" id="yield-grade"></div>
+          </div>
+        </div>
+
+        <div class="yield-bar-wrap">
+          <div class="yield-bar-track">
+            <div class="yield-bar-fill" id="yield-bar"></div>
+          </div>
+          <div class="yield-bar-labels"><span>0</span><span>5</span><span>10+ t/ha</span></div>
+        </div>
+      </div>
+
+      <!-- Loading state -->
+      <div class="glass-card loading-card hidden" id="loading-card">
+        <div class="loader-wrap">
+          <div class="crop-loader">
+            <span>🌱</span><span>🌿</span><span>🌾</span>
+          </div>
+          <p>Analyzing your farm data…</p>
+        </div>
+      </div>
+
+      <!-- Error card -->
+      <div class="glass-card error-card hidden" id="error-card">
+        <p id="error-msg"></p>
+      </div>
+
+    </section>
+  </main>
+
+  <!-- ── SUGGESTIONS & TIPS ────────────────────────────────────────────────── -->
+  <section class="suggestions-section hidden" id="suggestions-section">
+    <div class="section-header">
+      <h2>🎯 Smart Farming Suggestions</h2>
+      <p>Personalized recommendations based on your farm data</p>
+    </div>
+
+    <div class="suggestions-grid">
+      <div class="sugg-block" id="sugg-block">
+        <h3>⚡ Immediate Actions</h3>
+        <div class="sugg-list" id="sugg-list"></div>
+      </div>
+      <div class="tips-block" id="tips-block">
+        <h3>💡 Expert Farming Tips</h3>
+        <div class="tips-list" id="tips-list"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CROP GUIDE ─────────────────────────────────────────────────────────── -->
+  <section class="crop-guide-section hidden" id="crop-guide-section">
+    <div class="section-header">
+      <h2>📚 Crop Guide</h2>
+      <p id="crop-guide-title">Complete farming reference</p>
+    </div>
+    <div class="guide-grid" id="guide-grid"></div>
+  </section>
+
+  <!-- ── ALL CROPS OVERVIEW ─────────────────────────────────────────────────── -->
+  <section class="all-crops-section">
+    <div class="section-header">
+      <h2>🌍 All Supported Crops</h2>
+      <p>Click a crop to learn more</p>
+    </div>
+    <div class="crops-overview-grid" id="crops-overview"></div>
+  </section>
+
+  <!-- ── FOOTER ─────────────────────────────────────────────────────────────── -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <span class="footer-logo">🌾</span>
+        <div>
+          <h3>Crop Catalyst</h3>
+          <p>AI-Powered Smart Farming</p>
+        </div>
+      </div>
+      <div class="footer-features">
+        <span>🤖 AI Yield Prediction</span>
+        <span>💡 Smart Suggestions</span>
+        <span>📚 Crop Guides</span>
+        <span>⚡ Expert Tips</span>
+      </div>
+      <p class="footer-copy">🚜 Smart Farming &nbsp;•&nbsp; 🌍 Better Future &nbsp;•&nbsp; 📈 Higher Productivity</p>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
