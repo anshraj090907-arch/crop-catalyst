@@ -4,7 +4,7 @@ import requests
 
 st.set_page_config(page_title="Crop Catalyst", layout="wide")
 
-BACKEND_URL = "http://localhost:5000"
+BACKEND_URL = "https://crop-catalyst-mrkm.onrender.com/"
 
 # ── Initialize session state ──────────────────────────────
 if "prediction_success" not in st.session_state:
